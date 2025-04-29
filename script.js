@@ -41,8 +41,11 @@ function displayEntry(entry) { //Определяет функцию для от
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Удалить';
     deleteButton.onclick = () => deleteEntry(entry);
-
-    listItem.appendChild(deleteButton); // Добавляем кнопку к элементу списка
+    deleteButton.onclick = () => {
+        deleteEntry(entry);
+        entryList.removeChild(listItem); // Удаляем элемент из списка
+    };
+    listItem.appendChild(deleteButton); // Добавляем кнопку в элемент списка
     entryList.prepend(listItem); // Добавление элемента в начало списка
 }
 
