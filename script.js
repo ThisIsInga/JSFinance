@@ -32,22 +32,70 @@ function getEntries() { //получения записей.
     return JSON.parse(localStorage.getItem('financialEntries')) || [];
 }
 
-function displayEntry(entry) { //Определяет функцию для отображения записи.
+function displayEntry(entry) { // Определяет функцию для отображения записи.
     const entryList = document.getElementById('entryList');
     const listItem = document.createElement('li');
     listItem.textContent = `Дата: ${entry.date}, Доход: ${entry.income}, Расходы: ${entry.expenses}, Итого: ${entry.total}`;
 
-    // Создаем кнопку удаления
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Удалить';
-    deleteButton.onclick = () => deleteEntry(entry);
+    // Создаем кнопку удаления (крестик)
+    const deleteButton = document.createElement('img');
+    deleteButton.src = 'img/delete.png'; // Путь к изображению крестика
+    deleteButton.alt = 'Удалить';
+    deleteButton.style.cursor = 'pointer';
+    deleteButton.style.marginLeft = '10px';
+    deleteButton.style.marginTop = '3px';
     deleteButton.onclick = () => {
         deleteEntry(entry);
         entryList.removeChild(listItem); // Удаляем элемент из списка
     };
-    listItem.appendChild(deleteButton); // Добавляем кнопку в элемент списка
+
+    // Создаем кнопку редактирования (карандаш)
+    const editButton = document.createElement('img');
+    editButton.src = 'img/edit.png'; // Путь к изображению карандаша
+    editButton.alt = 'Редактировать';
+    editButton.style.cursor = 'pointer';
+    editButton.style.marginLeft = '10px';
+    editButton.style.marginTop = '3px';
+    editButton.onclick = () => {
+        editEntry(entry);
+    };
+
+    listItem.appendChild(deleteButton); // Добавляем кнопку удаления в элемент списка
+    listItem.appendChild(editButton); // Добавляем кнопку редактирования в элемент списка
     entryList.prepend(listItem); // Добавление элемента в начало списка
 }
+
+let currentEntry = null; // Переменная для хранения текущей редактируемой записи
+
+function editEntry(entry) {
+    currentEntry = entry; // Сохраняем текущую запись
+    document.getElementById('editIncome').value = entry.income; // Заполняем поле дохода
+    document.getElementById('editExpenses').value = entry.expenses; // Заполняем поле расходов
+    document.getElementById('editModal').style.display = 'flex'; // Показываем модальное окно с flex
+}
+
+function closeModal() {
+    document.getElementById('editModal').style.display = 'none'; // Закрываем модальное окно
+}
+
+document.getElementById('saveEditButton').onclick = function() {
+    const income = parseFloat(document.getElementById('editIncome').value) || 0;
+    const expenses = parseFloat(document.getElementById('editExpenses').value) || 0;
+    const total = income - expenses; // (доход - расходы).
+
+    const updatedEntry = {
+        ...currentEntry,
+        income,
+        expenses,
+        total,
+        date: currentEntry.date, // Сохраняем дату без изменений
+    };
+
+    deleteEntry(currentEntry); // Удаляем старую запись
+    saveEntry(updatedEntry); // Сохраняем обновленную запись
+    displayEntry(updatedEntry); // Отображаем обновленную запись
+    closeModal(); // Закрываем модальное окно
+};
 
 function loadEntries() {
     const entries = getEntries(); //Получает записи из локального хранилища.

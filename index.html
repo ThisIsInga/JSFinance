@@ -22,7 +22,21 @@
     <h2>Список записей:</h2>
     <ul id="entryList"></ul>
 
-    
+    <div id="editModal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">
+                <img src="img/delete.png" alt="кнопка закрытия окна редактирования">
+            </span>
+            <h2>Редактировать запись</h2>
+            <label for="editIncome">Ввод доходов:</label>
+            <input type="number" id="editIncome" required placeholder="Введите доход">
+            
+            <label for="editExpenses">Ввод расходов:</label>
+            <input type="number" id="editExpenses" required placeholder="Введите расходы">
+            
+            <button id="saveEditButton">Сохранить изменения</button>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
